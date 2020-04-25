@@ -1,6 +1,6 @@
 # Exploring_the_Allen_model
 
-This project provides code and files related to the Master thesis "Exploring a Model of the Mouse Primary Visual Cortex" by Lena Myklebust.
+This repository provides code and files related to the Master thesis "Exploring a Model of the Mouse Primary Visual Cortex" by Lena Myklebust.
 
 Scripts are mainly used for analysing simulation output from the Primary Visual Cortex model developed by the Allen Institute for Brain Science, see https://portal.brain-map.org/explore/models/mv1-all-layers.
 
