@@ -74,7 +74,7 @@ plt.plot(cpd_array, mean_F1, linestyle='-', marker='.',
 plt.plot(cpd_array, mean_F0, linestyle='-', marker='.', 
          linewidth=0.2, c='tab:cyan', label='F0')
 plt.xlabel('Spatial frequency (cpd)')
-plt.ylabel('Firing rate (Hz)')
+plt.ylabel(ylab)
 plt.figlegend()
  
         
