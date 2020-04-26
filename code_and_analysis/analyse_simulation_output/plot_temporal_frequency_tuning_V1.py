@@ -122,7 +122,7 @@ else:
     ylab = 'Firing rate (spikes/sec)'
 
 
-# Plot F0 and F1 as a function of temporal frequency:
+# Plot firing rates as a function of temporal frequency:
 fig = plt.figure()
 plt.errorbar(tuning_array, mean_F0, yerr=sd_F0, marker='.', 
              label='F0', c='tab:cyan')
