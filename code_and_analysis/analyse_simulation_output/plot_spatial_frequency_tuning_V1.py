@@ -119,8 +119,6 @@ if normalise_rates:
     mean_F0 = mean_F0/np.amax(mean_F0)
     ylab = 'Relative activity'
 else:
-    mean_F1 = mean_F1
-    mean_F0 = mean_F0
     ylab = 'Firing rate (spikes/sec)'
 
 
