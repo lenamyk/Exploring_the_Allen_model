@@ -21,6 +21,7 @@ simlength = 3000
 tsteps_per_sec = 1000
 sf = '0.08'
 tf = 4
+stim_type = 'grating'
 dogparam = '1.73ac_1as_2.45sc'
 
 
@@ -70,22 +71,23 @@ for j in range(len(tuning_array)):
         matrix_of_firing_rates[:,i] = firing_rate
     
     
-        #Calculate F0 per trial:
+        #Calculate time average (or F0) per trial:
         time_average_per_trial[i] \
         = np.mean(matrix_of_firing_rates[200:, i])
     
     
         #Calculate F1 per trial:
-        start_measuring = 500
-        signal = firing_rate[start_measuring:simlength]
-        ff = np.fft.fft(signal)   
-        ff_freq = np.fft.fftfreq(signal.size)*tsteps_per_sec 
-        amp_spectr = np.abs(ff)*2/(simlength - start_measuring) 
-        ff_freq_positive = ff_freq[:int(len(ff_freq)/2)]
-        amp_spectr_positive = amp_spectr[:int(len(amp_spectr)/2)]  
-        mean_amplitude_per_trial[i] = np.interp(tf, 
-                                                ff_freq_positive, 
-                                                amp_spectr_positive)  
+        if stim_type == 'grating':
+            start_measuring = 500
+            signal = firing_rate[start_measuring:simlength]
+            ff = np.fft.fft(signal)   
+            ff_freq = np.fft.fftfreq(signal.size)*tsteps_per_sec 
+            amp_spectr = np.abs(ff)*2/(simlength - start_measuring) 
+            ff_freq_pos = ff_freq[:int(len(ff_freq)/2)]
+            amp_spectr_pos = amp_spectr[:int(len(amp_spectr)/2)]  
+            mean_amplitude_per_trial[i] = np.interp(tf, 
+                                                    ff_freq_pos, 
+                                                    amp_spectr_pos)  
     
     
         # Plot firing rate for each trial:
@@ -96,15 +98,16 @@ for j in range(len(tuning_array)):
         ax.set_xticklabels([])
             
         
-    #Calculate trial averages of F0 and F1:
+    #Calculate trial averages of firing rates:
     mean_spikes = np.mean(matrix_of_firing_rates, axis=1)  
     mean_F0[j] = np.mean(mean_spikes)  
     sd_F0[j] = statistics.stdev(time_average_per_trial)
-    mean_F1[j] = np.mean(mean_amplitude_per_trial)  
-    sd_F1[j] = statistics.stdev(mean_amplitude_per_trial)
+    if stim_type == 'grating':
+        mean_F1[j] = np.mean(mean_amplitude_per_trial)  
+        sd_F1[j] = statistics.stdev(mean_amplitude_per_trial)
 
 
-    # Plot trial averaged spike train:
+    # Plot trial averaged firing rate:
     ax = fig.add_subplot(len(trials)+1, 1, len(trials)+1)
     ax.plot(t, mean_spikes,c='tab:orange', linewidth=0.5)
     ax.set_title('mean', loc='left', x=1.01, y=0)
@@ -115,28 +118,27 @@ for j in range(len(tuning_array)):
 
     
 #Normalise rates:
-if normalise_rates:
+if normalise_rates and stim_type == 'grating':
     sd_F1 = sd_F1/np.amax(mean_F1)
     sd_F0 = sd_F0/np.amax(mean_F0)
     mean_F1 = mean_F1/np.amax(mean_F1)
     mean_F0 = mean_F0/np.amax(mean_F0)
     ylab = 'Relative activity'
 else:
-    mean_F1 = mean_F1
-    mean_F0 = mean_F0
     ylab = 'Firing rate (spikes/sec)'
 
 
-# Plot F0 and F1 as a function of stimuli size:
+# Plot firing rates as a function of stimuli size:
 fig = plt.figure()
-plt.errorbar(tuning_array, mean_F0, yerr=sd_F0, marker='.', 
-             label='F0', c='tab:cyan')
-plt.errorbar(tuning_array, mean_F1, yerr=sd_F1, marker='.', 
-             label='F1', c='mediumblue')
+if stim_type == 'grating':
+    plt.errorbar(tuning_array, mean_F0, yerr=sd_F0, marker='.', 
+                 label='F0', c='tab:cyan')
+    plt.errorbar(tuning_array, mean_F1, yerr=sd_F1, marker='.', 
+                 label='F1', c='mediumblue')
+else:
+    plt.errorbar(tuning_array, mean_F0, yerr=sd_F0, marker='.', 
+                 label='Mean firing rate',c='tab:cyan')
 plt.xlabel('Diameter (degrees)')
 plt.ylabel(ylab)
 plt.xscale('log')
 plt.figlegend() 
-
-
-
