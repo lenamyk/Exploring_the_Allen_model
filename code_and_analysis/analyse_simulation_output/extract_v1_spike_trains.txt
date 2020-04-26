@@ -1,0 +1,46 @@
+#!/bin/bash                                                                                                                                                                  
+#This script reads in all the population names from the file 'all_pops.txt',
+#and selects ten neurons from each population close to the cortex center. 
+#In this case 'close to center' means within a 70 micrometer radius.
+#Spike trains from these neurons are then extracted from the V1 simulation 
+#output and written to separate files for each neuron and each trial.
+
+
+cpdnr=0.04
+
+
+IN_DIR="../../GLIF_network_2/scp_to_laptop"
+OUT_DIR="./bash_output"
+
+
+cat all_pops.txt | while read popname
+do
+    head neuron_ids_per_popnames/"$popname"_close_to_mid | while read nrid
+    do	                                                                                                                  
+    	for diam in 5 10 20 40 80 160 240                                               
+    	do                                                                                                                                                                      
+	    OUT_PATH="$OUT_DIR/id_"$nrid"/"$diam"pix_3s_155d_4tf_0.04cpd_0.2gray_m1"
+	    mkdir -p $OUT_PATH
+	
+            for trialnr in {0..19}
+       	    do	
+            	# Convert to unix format:                                                                                                                               
+            	tr -d '\r' < "$IN_DIR/"$diam"pix_3s_155d_4tf_"$cpdnr"cpd_0.2gray_m1_tr"$trialnr".csv" > \
+ 		"$IN_DIR/"$diam"pix_3s_155d_4tf_"$cpdnr"cpd_0.2gray_m1_tr"$trialnr"_unix.csv"                                                                                                                                                     
+
+		#Remove original file:
+           	if [ -s "$IN_DIR/"$diam"pix_3s_155d_4tf_"$cpdnr"cpd_0.2gray_m1_tr"$trialnr"_unix.csv" ]                                                                                                                                                              
+           	then                                                                                                                                                                            
+                	rm "$IN_DIR/"$diam"pix_3s_155d_4tf_"$cpdnr"cpd_0.2gray_m1_tr"$trialnr".csv"                                                                                                                                                                     
+            	fi
+
+		# Grab spikes for selected neurons:
+	    	grep "[[:space:]]"$nrid"$" \
+		"$IN_DIR/"$diam"pix_3s_155d_4tf_"$cpdnr"cpd_0.2gray_m1_tr"$trialnr"_unix.csv" \
+		| awk '{print $1}' > \
+		"$OUT_PATH/"$diam"pix_3s_155d_4tf_"$cpdnr"cpd_0.2gray_1.73ac_1as_2.45sc_tr"$trialnr".txt"
+	                                                                                                                  
+       	    done
+        done
+    done   
+done
