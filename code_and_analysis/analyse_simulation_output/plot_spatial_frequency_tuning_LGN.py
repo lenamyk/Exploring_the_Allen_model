@@ -68,7 +68,7 @@ if normalise_rates:
 else:
     ylab = 'Firing rate (spikes/sec)'
     
-
+# Plot firing rates as a function of spatial frequency:
 plt.plot(cpd_array, mean_F1, linestyle='-', marker='.', 
          linewidth=0.2, c='mediumblue', label='F1')
 plt.plot(cpd_array, mean_F0, linestyle='-', marker='.', 
