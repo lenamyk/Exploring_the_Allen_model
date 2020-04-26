@@ -55,8 +55,8 @@ for j in range(len(tuning_array)):
     
     for i in trials:    
         # Read in spike output:
-        filename = "m1/id%s/%dpix/3s_155d_%dtf_%scpd_%s_tr%d.txt" \
-        % (nrid,  tuning_array[j], tf, sf, dogparam, i)
+        filename = "m1/id%s/%dpix/3s_155d_4tf_0.08cpd_%s_tr%d.txt" \
+        % (nrid,  tuning_array[j], dogparam, i)
         a = open(filename, 'r+')
         spike_times = a.readlines()
         spike_times = np.array(spike_times, dtype=float)
