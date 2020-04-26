@@ -13,7 +13,7 @@ import numpy as np
 
 radius_limit = 70
 
-
+# Read in somatic coordinates: 
 f = h5py.File('./v1_nodes.h5','r')
 x = f['/nodes/v1/0/x']
 z = f['/nodes/v1/0/z']
