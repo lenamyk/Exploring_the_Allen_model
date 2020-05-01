@@ -9,6 +9,7 @@ tsteps_per_sec: temporal resolution (time steps per seconds)
 tf: temporal frequency (Hz)
 cpd_array: set of spatial frequencies for the tuning curve
 normalise_rates: set to 'True' is rates should be normalised
+window: set measurement window for calculating firing rates
 """
 
 
@@ -21,6 +22,7 @@ neuron_id = 8018
 simlength = 3000 
 tsteps_per_sec = 1000
 tf = 4
+window = 1000
 cpd_array = np.array([0.005,0.04,0.08,0.12,0.16,0.2,0.24,0.28,0.32])
 normalise_rates = False
 
@@ -42,7 +44,7 @@ for i in range(len(cpd_array)):
             
     
     # Set measurement window:
-    interval = 1000
+    interval = window
     period_start = int(simlength/2) 
     period_end = period_start + interval
         
