@@ -11,7 +11,8 @@ sf: spatial frequency (cpd)
 tuning_array: set of stimuli diameters for the tuning curve
 normalise_rates: set to 'True' if rates should be normalised
 stim_type: type of stimuli, set to either 'flash' or 'grating'
-flash_duration: flash duration (ms), set to 75, 300 or None
+grat_interval: measurement window for grating stimuli
+flash_interval: measurement window for flashing stimuli
 """
 
 
@@ -28,7 +29,8 @@ sf = 0.04
 tuning_array = np.array([5,10,20,40,80,160,240])
 normalise_rates = False
 stim_type = 'grating'
-flash_duration = None
+grat_interval = 1000
+flash_interval = 1200
 
 
 # Firing rates (F0 and F1) for each stimuli size:
@@ -49,9 +51,9 @@ for i in range(len(tuning_array)):
     
     # Set measurement window:
     if stim_type == 'grating':
-        interval = int(tsteps_per_sec/tf) 
+        interval = grat_interval
     elif stim_type == 'flash':
-        interval = int(flash_duration*2)
+        interval = flash_interval
     period_start = int(simlength/2) 
     period_end = period_start + interval
         
