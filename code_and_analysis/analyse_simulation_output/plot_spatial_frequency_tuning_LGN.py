@@ -9,7 +9,7 @@ tsteps_per_sec: temporal resolution (time steps per seconds)
 tf: temporal frequency (Hz)
 cpd_array: set of spatial frequencies for the tuning curve
 normalise_rates: set to 'True' is rates should be normalised
-window: set measurement window for calculating firing rates
+window: measurement window for calculating firing rates
 """
 
 
