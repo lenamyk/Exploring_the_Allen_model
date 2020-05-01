@@ -42,7 +42,7 @@ for i in range(len(cpd_array)):
             
     
     # Set measurement window:
-    interval = int(tsteps_per_sec/tf) 
+    interval = 1000
     period_start = int(simlength/2) 
     period_end = period_start + interval
         
