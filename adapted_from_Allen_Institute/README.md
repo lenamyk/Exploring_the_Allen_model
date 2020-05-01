@@ -1,4 +1,4 @@
-This folder contains files adapter from the LGN model, developed by the Allen Institute.   
+This folder contains files adapted from the LGN model developed by the Allen Institute.   
 
 
 The folder "Modifications_M1_and_M2_models" include files which were modified to create the M1 and M2 LGN models 
