@@ -5,7 +5,7 @@ This folder contains the files which were modified from the Allen LGN model
 to create the M1 and M2 models for the thesis "Exploring a Model of the Mouse Primary Visual Cortex".
 
 
-The modifications made to each file are presented below.
+The modifications made to each file are listed below.
 
 **flashing_spots.py:**
 
