@@ -46,7 +46,7 @@ for i in range(len(tuning_array)):
             
     
     # Set measurement window:
-    interval = 1000 
+    interval = window
     period_start = int(simlength/2) 
     period_end = period_start + interval
       
