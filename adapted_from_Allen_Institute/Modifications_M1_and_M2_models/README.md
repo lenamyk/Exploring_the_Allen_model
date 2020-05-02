@@ -7,8 +7,55 @@ to create the M1 and M2 models for the thesis "Exploring a Model of the Mouse Pr
 
 The modifications made to each file are listed below.
 
-**flashing_spots.py:**
+**spatialfilter_surr.py**
+```diff
+# Replace simple Gaussian filter with Difference-of-Gaussians (DoG):
+- on_filter_spatial = ndimage.gaussian_filter(on_filter_spatial, 
+-                                             (scaled_sigma_x, scaled_sigma_y), 
+-                                             mode='nearest', 
+-                                             cval=0)
++ scal_sig = 2.45
++ cent_amp = 1.73
++ scal_amp = 1*cent_amp   
++ filter_cen = ndimage.gaussian_filter(on_filter_spatial, 
++                                      (scaled_sigma_x, scaled_sigma_y), 
++                                      mode='nearest', 
++                                      cval=0)
++ filter_sur = ndimage.gaussian_filter(on_filter_spatial, 
++                                      (scal_sig*scaled_sigma_x, scal_sig*scaled_sigma_y), 
++                                      mode='nearest', 
++                                      cval=0)
++ on_filter_spatial = cent_amp*filter_cen - scal_amp*filter_sur
 
+
+# Remove second normalisation of already normalised spatial filters 
+# to avoid wrong amplitude of DoG filters:
+- kernel.normalize()
+```
+
+
+**lgn_functions_normalise_rates.py:**
+```diff
+# Find mean of all firing rates per time:
++ net_mean = np.mean(firing_rates[1:,:],axis=0)   
++ net_mean_plus_one = [x+1 for x in np.array(net_mean)]
+    
+# Normalise rates, scale to keep spontaneous rate unchanged:
++ for counter, node in enumerate(LGN.nodes()):
++     firing_rates[counter+1,:] = np.divide(np.array(firing_rates[counter+1,:]), net_mean_plus_one)*4.84 
+```
+
+
+**patch_grating.py:**
+```diff
+# Apply mask to get circular patches from the full-field grating:
++ circle = (xx - self.col_size / 2) ** 2 + (yy - self.row_size / 2) ** 2
++ mask = (circle <= radius**2)
++ data[~mask] = 0
+```
+
+
+**flashing_spots.py:**
 ```diff
 # Change spatial resolution to 1 pixel per degree:
 - physical_spacing = 1. / (float(cpd) * 10)
@@ -38,39 +85,6 @@ The modifications made to each file are listed below.
 + data = np.concatenate((data, gray_partb), axis=0)
 ```
 
-**patch_grating.py:**
-```diff
-# Apply mask to get circular patches from the full-field grating:
-+ circle = (xx - self.col_size / 2) ** 2 + (yy - self.row_size / 2) ** 2
-+ mask = (circle <= radius**2)
-+ data[~mask] = 0
-```
-
-**spatialfilter_surr.py**
-```diff
-# Replace simple Gaussian filter with Difference-of-Gaussians (DoG):
-- on_filter_spatial = ndimage.gaussian_filter(on_filter_spatial, 
--                                             (scaled_sigma_x, scaled_sigma_y), 
--                                             mode='nearest', 
--                                             cval=0)
-+ scal_sig = 2.45
-+ cent_amp = 1.73
-+ scal_amp = 1*cent_amp   
-+ filter_cen = ndimage.gaussian_filter(on_filter_spatial, 
-+                                      (scaled_sigma_x, scaled_sigma_y), 
-+                                      mode='nearest', 
-+                                      cval=0)
-+ filter_sur = ndimage.gaussian_filter(on_filter_spatial, 
-+                                      (scal_sig*scaled_sigma_x, scal_sig*scaled_sigma_y), 
-+                                      mode='nearest', 
-+                                      cval=0)
-+ on_filter_spatial = cent_amp*filter_cen - scal_amp*filter_sur
-
-
-# Remove second normalisation of already normalised spatial filters 
-# to avoid wrong amplitude of DoG filters:
-- kernel.normalize()
-```
 
 **lgn_functions.py:**
 ```diff
@@ -111,22 +125,14 @@ The modifications made to each file are listed below.
 +                                                     radius = radius)
 ```
 
+
 **simulate_drifting_gratings.py:**
 ```diff
 # Include "radius" as a parameter for visual stimuli:
 - calculate_firing_rate(LGN, stimulus, output_file_name, duration, 
 -                       gray_screen, cpd, TF, direction, contrast)
 + calculate_firing_rate(LGN, stimulus, output_file_name, duration, 
--                       gray_screen, cpd, TF, direction, contrast, radius)
++                       gray_screen, cpd, TF, direction, contrast, radius)
 ```
 
-**lgn_functions_normalise_rates.py:**
-```diff
-# Find mean of all firing rates per time:
-+ net_mean = np.mean(firing_rates[1:,:],axis=0)   
-+ net_mean_plus_one = [x+1 for x in np.array(net_mean)]
-    
-# Normalise rates, scale to keep spontaneous rate unchanged:
-+ for counter, node in enumerate(LGN.nodes()):
-+     firing_rates[counter+1,:] = np.divide(np.array(firing_rates[counter+1,:]), net_mean_plus_one)*4.84 
-```
+
