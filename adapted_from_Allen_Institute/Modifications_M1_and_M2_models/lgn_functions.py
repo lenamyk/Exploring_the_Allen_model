@@ -43,7 +43,7 @@ from lgnmodel.linearfilter import SpatioTemporalFilter
 from lgnmodel.transferfunction import ScalarTransferFunction, MultiTransferFunction
 from lgnmodel.cellmodel import TwoSubfieldLinearCell, OnUnit, OffUnit
 from lgnmodel.util_fns import create_ff_mov, get_data_metrics_for_each_subclass, create_grating_movie_list, get_tcross_from_temporal_kernel
-from lgnmodel.moving_grating import GratingMovie, FullFieldFlashMovie # Define which visual input to use
+from lgnmodel.patch_grating import GratingMovie, FullFieldFlashMovie # Define which visual input to use
 import lgnmodel.poissongeneration as pg
 
 from sympy.abc import x as symbolic_x
