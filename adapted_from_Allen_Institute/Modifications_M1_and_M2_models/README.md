@@ -3,11 +3,10 @@ Files are adapted from: https://www.dropbox.com/sh/w5u31m3hq6u2x5m/AACpYpeWnm6s_
 
 This folder contains the files which were modified from the Allen LGN model
 to create the M1 and M2 models for the thesis "Exploring a Model of the Mouse Primary Visual Cortex".
-
-
 The modifications made to each file are listed below.
 
-**spatialfilter_surr.py**
+
+**spatialfilter_surr.py:**
 ```diff
 # Replace simple Gaussian filter with Difference-of-Gaussians (DoG):
 - on_filter_spatial = ndimage.gaussian_filter(on_filter_spatial, 
