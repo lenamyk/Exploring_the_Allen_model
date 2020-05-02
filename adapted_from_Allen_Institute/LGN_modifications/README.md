@@ -138,7 +138,7 @@ The modifications made to each file are listed below.
 
 **nwb_copy.py:**
 ```diff
-# Make code compatible with Python 3:
+# Make nwb script compatible with Python 3:
 + dim_string = str(dimension)
 + print('generating spikes')
 + unit_string = str(unit)
