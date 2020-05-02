@@ -198,7 +198,7 @@ class GratingMovie(Movie):
         numberFramesNeeded = int(round(self.frame_rate * (t_max - gray_screen_dur))) + 1
         
         
-        nr_of_flashes = 5
+        nr_of_flashes = 20
         seg_length = int((numberFramesNeeded-1)/(nr_of_flashes*2))
         
         time_range = np.linspace(0, t_max/seg_length, seg_length, endpoint=True)
