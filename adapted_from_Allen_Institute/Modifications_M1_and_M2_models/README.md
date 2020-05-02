@@ -33,18 +33,6 @@ The modifications made to each file are listed below.
 ```
 
 
-**lgn_functions_normalise_rates.py:**
-```diff
-# Find mean of all firing rates per time:
-+ net_mean = np.mean(firing_rates[1:,:],axis=0)   
-+ net_mean_plus_one = [x+1 for x in np.array(net_mean)]
-    
-# Normalise rates, scale to keep spontaneous rate unchanged:
-+ for counter, node in enumerate(LGN.nodes()):
-+     firing_rates[counter+1,:] = np.divide(np.array(firing_rates[counter+1,:]), net_mean_plus_one)*4.84 
-```
-
-
 **patch_grating.py:**
 ```diff
 # Apply mask to get circular patches from the full-field grating:
@@ -122,6 +110,19 @@ The modifications made to each file are listed below.
 +                                                     theta = direction,
 +                                                     contrast = contrast/100., 
 +                                                     radius = radius)
+```
+
+
+**lgn_functions_normalise_rates.py:**
+```diff
+# Modifications are in addition to those listed above for "lgn_functions.py"
+# Find mean of all firing rates per time:
++ net_mean = np.mean(firing_rates[1:,:],axis=0)   
++ net_mean_plus_one = [x+1 for x in np.array(net_mean)]
+    
+# Normalise rates, scale to keep spontaneous rate unchanged:
++ for counter, node in enumerate(LGN.nodes()):
++     firing_rates[counter+1,:] = np.divide(np.array(firing_rates[counter+1,:]), net_mean_plus_one)*4.84 
 ```
 
 
