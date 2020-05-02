@@ -38,7 +38,7 @@ The modifications made to each file are presented below.
 + data = np.concatenate((data, gray_partb), axis=0)
 ```
 
-**patch_grating.py**
+**patch_grating.py:**
 ```diff
 # Apply mask to get circular patches from the full-field grating:
 + circle = (xx - self.col_size / 2) ** 2 + (yy - self.row_size / 2) ** 2
@@ -49,20 +49,30 @@ The modifications made to each file are presented below.
 **spatialfilter_surr.py**
 ```diff
 # Replace simple Gaussian filter with Difference-of-Gaussians (DoG):
-- on_filter_spatial = ndimage.gaussian_filter(on_filter_spatial, (scaled_sigma_x, scaled_sigma_y), mode='nearest', cval=0)
+- on_filter_spatial = ndimage.gaussian_filter(on_filter_spatial, 
+-                                             (scaled_sigma_x, scaled_sigma_y), 
+-                                             mode='nearest', 
+-                                             cval=0)
 + scal_sig = 2.45
 + cent_amp = 1.73
 + scal_amp = 1*cent_amp   
-+ filter_cen = ndimage.gaussian_filter(on_filter_spatial, (scaled_sigma_x, scaled_sigma_y), mode='nearest', cval=0)
-+ filter_sur = ndimage.gaussian_filter(on_filter_spatial, (scal_sig*scaled_sigma_x, scal_sig*scaled_sigma_y), mode='nearest', cval=0)
++ filter_cen = ndimage.gaussian_filter(on_filter_spatial, 
++                                      (scaled_sigma_x, scaled_sigma_y), 
++                                      mode='nearest', 
++                                      cval=0)
++ filter_sur = ndimage.gaussian_filter(on_filter_spatial, 
++                                      (scal_sig*scaled_sigma_x, scal_sig*scaled_sigma_y), 
++                                      mode='nearest', 
++                                      cval=0)
 + on_filter_spatial = cent_amp*filter_cen - scal_amp*filter_sur
 
 
-# Remove second normalisation of already normalised spatial filters, avoid wrong amplitude of DoG filters:
+# Remove second normalisation of already normalised spatial filters 
+# to avoid wrong amplitude of DoG filters:
 - kernel.normalize()
 ```
 
-**lgn_functions.py**
+**lgn_functions.py:**
 ```diff
 # Import adapted nwb:
 - import isee_engine.nwb as nwb
@@ -80,25 +90,40 @@ The modifications made to each file are presented below.
 
 
 # Include "radius" as a parameter for visual stimuli:
-- def calculate_firing_rate(LGN, stimulus, output_file_name, duration, gray_screen,  cpd, TF, direction, contrast):
-+ def calculate_firing_rate(LGN, stimulus, output_file_name, duration, gray_screen,  cpd, TF, direction, contrast, radius):
-- movie_to_show = GratingMovie(120, 240).create_movie(t_min = 0, t_max = duration, gray_screen_dur = gray_screen, \
-- cpd = cpd, temporal_f = TF, theta = direction, contrast = contrast/100.)
-+ movie_to_show = GratingMovie(120, 240).create_movie(t_min = 0, t_max = duration, gray_screen_dur = gray_screen, \
-+ cpd = cpd, temporal_f = TF, theta = direction, contrast = contrast/100., radius = radius)
+- def calculate_firing_rate(LGN, stimulus, output_file_name, duration, 
+-                           gray_screen,  cpd, TF, direction, contrast):
++ def calculate_firing_rate(LGN, stimulus, output_file_name, duration, 
++                           gray_screen,  cpd, TF, direction, contrast, radius):
+- movie_to_show = GratingMovie(120, 240).create_movie(t_min = 0, 
+-                                                     t_max = duration, 
+-                                                     gray_screen_dur = gray_screen, 
+-                                                     cpd = cpd, 
+-                                                     temporal_f = TF, 
+-                                                     theta = direction, 
+-                                                     contrast = contrast/100.)
++ movie_to_show = GratingMovie(120, 240).create_movie(t_min = 0, 
++                                                     t_max = duration, 
++                                                     gray_screen_dur = gray_screen, 
++                                                     cpd = cpd, 
++                                                     temporal_f = TF, 
++                                                     theta = direction,
++                                                     contrast = contrast/100., 
++                                                     radius = radius)
 ```
 
-**simulate_drifting_gratings.py**
+**simulate_drifting_gratings.py:**
 ```diff
 # Include "radius" as a parameter for visual stimuli:
-- calculate_firing_rate(LGN, stimulus, output_file_name, duration, gray_screen, cpd, TF, direction, contrast)
-+ calculate_firing_rate(LGN, stimulus, output_file_name, duration, gray_screen, cpd, TF, direction, contrast, radius)
+- calculate_firing_rate(LGN, stimulus, output_file_name, duration, 
+-                       gray_screen, cpd, TF, direction, contrast)
++ calculate_firing_rate(LGN, stimulus, output_file_name, duration, 
+-                       gray_screen, cpd, TF, direction, contrast, radius)
 ```
 
-**lgn_functions_normalise_rates.py**
+**lgn_functions_normalise_rates.py:**
 ```diff
 # Find mean of all firing rates per time:
-+ net_mean = np.mean(firing_rates[1:,:],axis=0)   # Dont include the first row (time) in mean
++ net_mean = np.mean(firing_rates[1:,:],axis=0)   
 + net_mean_plus_one = [x+1 for x in np.array(net_mean)]
     
 # Normalise rates, scale to keep spontaneous rate unchanged:
