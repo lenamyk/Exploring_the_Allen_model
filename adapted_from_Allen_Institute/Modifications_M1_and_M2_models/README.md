@@ -13,32 +13,31 @@ The modifications made to each file are presented below.
 # Change spatial resolution to 1 pixel per degree:
 - physical_spacing = 1. / (float(cpd) * 10)
 + physical_spacing = 1. / (float(0.1) * 10)  
-```
-```diff
+
 # Set number of flashes and length of each flash:
 + nr_of_flashes = 20
 + seg_length = int((numberFramesNeeded-1)/(nr_of_flashes*2))
-```
-```diff
+
+
 # Creating segments of gray and white full-field input:
 + gray_part = np.zeros((seg_length, self.row_size, self.col_size))
 + circle_part = np.ones((seg_length, self.row_size, self.col_size))
 + gray_partb = np.zeros((1, self.row_size, self.col_size))
-```
-```diff
+
+
 # Apply mask to get spot of specified size:
 + circle = (xx - self.col_size / 2) ** 2 + (yy - self.row_size / 2) ** 2       
 + mask = (circle <= radius**2)
 + circle_part[~mask] = 0
-```
-```diff
+
+
 # Create movie sequence:
 + segment = np.concatenate((circle_part, gray_part), axis=0)
 + data = np.tile(segment,reps =[nr_of_flashes,1,1])
 + data = np.concatenate((data, gray_partb), axis=0)
 ```
 
-**moving_grating.py **
+**moving_grating.py**
 ```diff
 # Apply mask to get circular patches from the full-field grating:
 + circle = (xx - self.col_size / 2) ** 2 + (yy - self.row_size / 2) ** 2
@@ -48,6 +47,8 @@ The modifications made to each file are presented below.
 
 **spatialfilter_surr.py**
 ```diff
+# Replace simple Gaussian filter with Difference-of-Gaussians:
+- on_filter_spatial = ndimage.gaussian_filter(on_filter_spatial, (scaled_sigma_x, scaled_sigma_y), mode='nearest', cval=0)
 + scal_sig = 2.45
 + cent_amp = 1.73
 + scal_amp = 1*cent_amp   
